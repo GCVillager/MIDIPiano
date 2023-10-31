@@ -7,36 +7,31 @@
 #include "midi.h"
 
 //channelPool start
-queue<int> channelPool::pool;
-bool channelPool::isInitialed = false;
-void channelPool::poolInit()
+//当前按键正在发的声音段数，使用atomic确保是原子操作
+atomic_int channelPool::occupyChannel[26] = { false };
+inline int channelPool::usingChannel()//当前整个电子琴使用的通道
 {
-	const int initList[11] = { 0,1,2,3,4,5,6,7,8,0xA,0xB };//这些是能当电子琴用的通道
-	for (int i = 0; i < 11; i++)
-		pool.push(initList[i]);
+	return 0xB;//这里写0xB是为了方便修改，下面同理
 }
-int channelPool::getChannel()
+int channelPool::getChannel(int key)
 {
-	if (!isInitialed)
-		isInitialed = true, poolInit();//确保使用前已初始化过池子
-	if (!pool.empty())
-	{
-		int newChannel = pool.front();
-		pool.pop();
-		return newChannel;
-	}
-	else
-		return -1; //-1 表示当前无可用通道
+	occupyChannel[key - 'A']++;
+	return usingChannel();
 }
-inline void channelPool::releaseChannel(int channel)
+inline int channelPool::releaseChannel(int key)
 {
-	pool.push(channel);
+	occupyChannel[key - 'A']--;
+	return usingChannel();
+}
+inline int channelPool::playingNumber(int key)
+{
+	return occupyChannel[key - 'A'];
 }
 //channelPool end
 
 
 //note start
-enum note::noteEnum
+enum note::noteEnum//音高和midi数字对应表，中央C=C4=60
 {
 	A0 = 21, A0S, B0,
 	C1, C1S, D1, D1S, E1, F1, F1S, G1, G1S, A1, A1S, B1,
@@ -50,19 +45,20 @@ enum note::noteEnum
 	C9, C9S, D9, D9S, E9, F9, F9S, G9, G9S, A9, A9S, B9,
 	C10, C10S, D10, D10S, E10, F10, F10S, G10
 };
-enum note::scale
+enum note::scale//各大小调的枚举
 {
 	MJ_C, MJ_CS, MJ_D, MJ_DS, MJ_E, MJ_F,
 	MJ_FS, MJ_G, MJ_GS, MJ_A, MJ_AS, MJ_B,
 	MN_A, MN_AS, MN_B, MN_C, MN_CS, MN_D,
 	MN_DS, MN_E, MN_F, MN_FS, MN_G, MN_GS
 };
+//映射键盘，下面是低音上面是高音
 map<int, int> note::keyMap = {
 	{'Q',14},{'W',15},{'E',16},{'R',17},{'T',18},{'Y',19},{'U',20},
 	{'A',7}, {'S',8}, {'D',9}, {'F',10},{'G',11},{'H',12},{'J',13},
 	{'Z',0}, {'X',1}, {'C',2}, {'V',3}, {'B',4}, {'N',5}, {'M',6} };
 
-bool note::isInitialed = false;
+bool note::isInitialed = false;//记录大小调表是否已经被生成
 int note::curScale = MJ_G;
 int note::scale[24][21];
 
@@ -90,30 +86,30 @@ void note::initScale()
 void note::setScale(int scale)
 {
 	if (!isInitialed)
-		isInitialed = true, initScale();
+		isInitialed = true, initScale();//使用前确保已经生成大小调表
 	curScale = scale;
 }
-int note::getNode(int key)
+int note::getNote(int key)
 {
 	if (!isInitialed)
 		isInitialed = true, initScale();
-	int keyNum = keyMap[key];
+	int keyNum = keyMap[key];//映射得到这个键在大小调表里对应的索引，从而得出音符值
 	return scale[curScale][keyNum];
 }
 //note end
 
 
 //volume start
-int volume::curVolume = 100;
+int volume::curVolume = 100;//这个音量值是百分比制的
 void volume::setVolume(int volume)
 {
 	curVolume = volume;
 }
-int volume::getVolume100()
+int volume::getVolume100()//返回百分比制的音量
 {
 	return curVolume;
 }
-int volume::getVolume128()
+int volume::getVolume128()//返回最大值为127（7F）的音量值，给接口用的
 {
 	return int(round(curVolume * 127.0 / 100));
 }
@@ -124,14 +120,12 @@ int volume::getVolume128()
 int instrument::curIns = 1;
 void instrument::setIns(HMIDIOUT hMidi, int insNum)
 {
-	const int channelList[11] = { 0,1,2,3,4,5,6,7,8,0xA,0xB };
-	curIns = insNum;
-	for (int i = 0; i < 11; i++)
-		midiOutShortMsg(hMidi, insNum << 8 | 0xC0 | channelList[i]);
+	int channel = channelPool::usingChannel();
+	midiOutShortMsg(hMidi, insNum << 8 | 0xC0 | channel);//将默认通道的乐器改成指定乐器
 }
 void instrument::setIns(HMIDIOUT hMidi)
 {
-	setIns(hMidi, curIns);
+	setIns(hMidi, curIns);//这个接口其实本来不使用，只是初始化用的
 }
 int instrument::getIns()
 {
@@ -142,31 +136,32 @@ int instrument::getIns()
 
 //play start
 int play::delay = 1500;
-map<int, int> play::occupyChannel;
-void play::delayPlay(HMIDIOUT hMidi, int value, int channel)//模拟钢琴踏板的延迟停止
+void play::delayPlay(HMIDIOUT hMidi, int value, int key)//模拟钢琴踏板的延迟停止
 {
 	Sleep(delay);
-	midiOutShortMsg(hMidi, value);
-	channelPool::releaseChannel(channel);
+	if (channelPool::playingNumber(key) <= 1)
+	{
+		midiOutShortMsg(hMidi, value);
+		cout << key << ' ' << channelPool::playingNumber(key) << endl;
+	}
+	channelPool::releaseChannel(key);
 }
 
 void play::playNote(HMIDIOUT hMidi, int key, bool status)//status:true=打开,false=关闭
 {
-	if (status == false)
+	if (status == false)//停止
 	{
-		int channel = occupyChannel[key];
-		thread(delayPlay, hMidi, 0x7BB0 | channel, channel).detach();//将通道补到最后一位上
-		//midiOutShortMsg(hMidi, 0x7BB0 | channel);
+		int pitch = note::getNote(key);
+		int channel = channelPool::usingChannel();
+		thread(delayPlay, hMidi, 0 << 16 | pitch << 8 | 0x90 | channel, key).detach();
+		//所谓停止其实是把这个音的音量改成0，开多线程以实现延迟停止功能
 		return;
 	}
-	else
+	else//开始
 	{
 		int realVolume = volume::getVolume128();
-		int pitch = note::getNode(key);
-		int channel = channelPool::getChannel();
-		if (channel == -1)
-			return;
-		occupyChannel[key] = channel;
+		int pitch = note::getNote(key);
+		int channel = channelPool::getChannel(key);
 		midiOutShortMsg(hMidi, realVolume << 16 | pitch << 8 | 0x90 | channel);
 		return;
 	}

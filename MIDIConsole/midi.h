@@ -5,6 +5,7 @@
 #include <map>
 #include <queue>
 #include <string>
+#include <atomic>
 
 #include <mmeapi.h>
 #include <Windows.h>
@@ -15,12 +16,12 @@ using namespace std;
 
 class channelPool
 {
-	static bool isInitialed;
-	static queue<int> pool;
+	static atomic_int occupyChannel[26];
 public:
-	static void poolInit();
-	static int getChannel();
-	static void releaseChannel(int channel);
+	static int usingChannel();//当前整个电子琴使用的通道
+	static int getChannel(int key);
+	static int releaseChannel(int key);
+	static int playingNumber(int key);
 };
 
 class note
@@ -35,7 +36,7 @@ class note
 public:
 	static void initScale();
 	static void setScale(int scale);
-	static int getNode(int key);
+	static int getNote(int key);
 };
 
 class volume
@@ -59,8 +60,7 @@ public:
 class play
 {
 	static int delay;
-	static map<int, int> occupyChannel;//value1=按键,value2=通道
-	static void delayPlay(HMIDIOUT hMidi, int value,int channel);
+	static void delayPlay(HMIDIOUT hMidi, int value,int key);
 public:
 	static void playNote(HMIDIOUT hMidi, int key, bool status);
 	inline static void setDelay(int time);

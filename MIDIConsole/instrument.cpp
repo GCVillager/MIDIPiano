@@ -1,6 +1,7 @@
 #include <string>
 #include "instrument.h"
 using namespace std;
+//所有乐器的列表，包括一些奇怪的玩意
 const pair<int, string> insList[128] = {
 	{0,"Acoustic Grand Piano 大钢琴（声学钢琴）"},
 	{1,"Bright Acoustic Piano 明亮的钢琴"},
@@ -132,6 +133,7 @@ const pair<int, string> insList[128] = {
 	{127,"Gunshot 枪击声"},
 };
 
+//乐器分类，这是每类乐器在上一个表里起始位置的标记
 const pair<int, string> insType[16] = {
 	{1,"钢琴"},{8,"色彩打击乐器"},{16,"风琴"},
 	{24,"吉他"},{32,"贝司"},{40,"弦乐"},

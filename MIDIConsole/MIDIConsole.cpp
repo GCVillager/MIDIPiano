@@ -64,13 +64,14 @@ int main()
 			if (!keyDown[round][i] && keyDown[1 - round][i])//刚被松开
 				play::playNote(hMidi, i, false);
 		}
-		if (keyDown[round][VK_ADD] || keyDown[round][VK_OEM_PLUS])
+		if (keyDown[round][VK_ADD] || keyDown[round][VK_OEM_PLUS])//主键盘区的加按键，控制音量用
 		{
+			//可单按，可长按
 			int curVolume = volume::getVolume100();
 			if (curVolume <= 98)
 				volume::setVolume(curVolume + 2);
 		}
-		if (keyDown[round][VK_SUBTRACT] || keyDown[round][VK_OEM_MINUS])
+		if (keyDown[round][VK_SUBTRACT] || keyDown[round][VK_OEM_MINUS])//主键盘区的减，同上
 		{
 			int curVolume = volume::getVolume100();
 			if (curVolume >= 2)
@@ -93,7 +94,7 @@ int main()
 					volume::setVolume(atoi(parsedCmd[1].c_str()));
 			}
 		}
-		Sleep(20);
+		Sleep(20);//可以认为是键盘读取tick间隔，减少IO开销
 	}
 	return 0;
 }
