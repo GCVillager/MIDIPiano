@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MIDIConsole", "MIDIConsole\MIDIConsole.vcxproj", "{6B05A77E-ABCE-405A-84D2-E931F25B6418}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Debug|x64.ActiveCfg = Debug|x64
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Debug|x64.Build.0 = Debug|x64
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Debug|x86.ActiveCfg = Debug|Win32
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Debug|x86.Build.0 = Debug|Win32
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Release|x64.ActiveCfg = Release|x64
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Release|x64.Build.0 = Release|x64
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Release|x86.ActiveCfg = Release|Win32
+		{6B05A77E-ABCE-405A-84D2-E931F25B6418}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9E119C1E-9AF8-401A-B064-4FCF8BD3689D}
+	EndGlobalSection
+EndGlobal
