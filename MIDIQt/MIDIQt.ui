@@ -24,8 +24,9 @@ border-image:url(background.jpg);
 QComboBox{
 background-color:rgba(255,255,255,0.4);
 }
-
-</string>
+QPushButton{
+background-color:rgba(225,225,225,0.45);
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="styleSheet">
@@ -282,11 +283,179 @@ background-color:rgba(255,255,255,0.4);
       <height>24</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
     <property name="styleSheet">
-     <string notr="true">background-color:rgba(225,225,225,0.45);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>保存配置</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStartRecord">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>160</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>开始记录</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStopSave">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>160</y>
+      <width>91</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>停止记录并保存</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStopGiveUp">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>160</y>
+      <width>91</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>停止记录并放弃</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonOpenFile">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>220</y>
+      <width>101</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>打开记录文件</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStartReplay">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>220</y>
+      <width>91</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>(重新)开始播放</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStopReplay">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>220</y>
+      <width>91</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>停止播放</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelNowPlaying">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>581</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>当前打开文件：无</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="sliderReplayVolume">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>250</y>
+      <width>160</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>100</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>回放音量调节</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelReplayVolume">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>250</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>当前音量：100</string>
     </property>
    </widget>
   </widget>
@@ -417,6 +586,118 @@ background-color:rgba(255,255,255,0.4);
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButtonStartRecord</sender>
+   <signal>clicked()</signal>
+   <receiver>MIDIQtClass</receiver>
+   <slot>startRecord()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>79</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>78</x>
+     <y>196</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonStopSave</sender>
+   <signal>clicked()</signal>
+   <receiver>MIDIQtClass</receiver>
+   <slot>stopRecordSave()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>191</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>191</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonStopGiveUp</sender>
+   <signal>clicked()</signal>
+   <receiver>MIDIQtClass</receiver>
+   <slot>stopRecordGiveUp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>269</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>267</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonOpenFile</sender>
+   <signal>clicked()</signal>
+   <receiver>MIDIQtClass</receiver>
+   <slot>openRecord()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>67</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonStartReplay</sender>
+   <signal>clicked()</signal>
+   <receiver>MIDIQtClass</receiver>
+   <slot>startReplay()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>169</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>169</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonStopReplay</sender>
+   <signal>clicked()</signal>
+   <receiver>MIDIQtClass</receiver>
+   <slot>stopReplay()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>286</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sliderReplayVolume</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MIDIQtClass</receiver>
+   <slot>changeVolume()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>271</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>225</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>changeScale()</slot>
@@ -425,5 +706,11 @@ background-color:rgba(255,255,255,0.4);
   <slot>changeVolume()</slot>
   <slot>changeDelay()</slot>
   <slot>saveCfg()</slot>
+  <slot>startRecord()</slot>
+  <slot>stopRecordSave()</slot>
+  <slot>stopRecordGiveUp()</slot>
+  <slot>openRecord()</slot>
+  <slot>startReplay()</slot>
+  <slot>stopReplay()</slot>
  </slots>
 </ui>

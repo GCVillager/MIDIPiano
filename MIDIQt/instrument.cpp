@@ -2,7 +2,7 @@
 #include "instrument.h"
 using namespace std;
 //所有乐器的列表，包括一些奇怪的玩意
-const pair<int, string> insList[128] = {
+const std::pair<int, std::string> insList[128] = {
 	{0,"Acoustic Grand Piano 大钢琴（声学钢琴）"},
 	{1,"Bright Acoustic Piano 明亮的钢琴"},
 	{2,"Electric Grand Piano 电钢琴"},

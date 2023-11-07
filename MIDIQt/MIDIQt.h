@@ -3,12 +3,17 @@
 #include <vector>
 #include <QtWidgets/QMainWindow>
 #include <QKeyEvent>
+#include <QFileDialog>
 #include <Windows.h>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 #include "ui_MIDIQt.h"
 
 #include "midi.h"
 #include "instrument.h"
 #include "fileCfg.h"
+#include "replay.h"
 
 #ifndef slots
 #define slots Q_SLOTS
@@ -48,4 +53,10 @@ public slots:
 	void changeVolume();
 	void changeDelay();
 	void saveCfg();
+	void startRecord();
+	void stopRecordSave();
+	void stopRecordGiveUp();
+	void openRecord();
+	void startReplay();
+	void stopReplay();
 };

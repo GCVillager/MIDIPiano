@@ -90,6 +90,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fileCfg.cpp" />
+    <ClCompile Include="replay.cpp" />
     <QtRcc Include="MIDIQt.qrc" />
     <QtUic Include="MIDIQt.ui" />
     <QtMoc Include="MIDIQt.h" />
@@ -102,7 +103,7 @@
     <ClInclude Include="instrument.h" />
     <ClInclude Include="midi.h" />
     <ClInclude Include="fileCfg.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="replay.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MIDIQt.rc" />

@@ -4,28 +4,42 @@
 #include <queue>
 #include <string>
 #include <atomic>
+#include <thread>
 
 #include <Windows.h>
 #pragma comment(lib,"winmm.lib")
 
-using namespace std;
+namespace cmdStatus
+{
+	enum cmdStatus//0是停止播放，1是开始播放，2是切换通道。主要是给记录功能用的
+	{
+		END, BEGIN, INS
+	};
+}
 
+
+void recordCmd(int cmd, int key, int status);
+//不得已写的前置声明，为了做记录用的
 
 class channelPool
 {
-	static atomic_int occupyChannel[26];
+	static std::atomic_int occupyChannel[2][26];
 public:
-	static int usingChannel();//当前整个电子琴使用的通道
-	static int getChannel(int key);
-	static int releaseChannel(int key);
-	static int playingNumber(int key);
+	enum usage
+	{
+		PLAY,REPLAY
+	};
+	static int usingChannel(int usage);//当前整个电子琴使用的通道
+	static int getChannel(int usage,int key);
+	static int releaseChannel(int usage,int key);
+	static int playingNumber(int usage,int key);
 };
 
 class note
 {
 	enum noteEnum;
 
-	static map<int, int> keyMap;
+	static std::map<int, int> keyMap;
 	static bool isInitialed;
 	static int curScale;
 	static int scale[24][21];
@@ -59,11 +73,11 @@ public:
 
 class volume
 {
-	static int curVolume;
+	static int curVolume[2];
 public:
-	static void setVolume(int volume);
-	static int getVolume100();
-	static int getVolume128();
+	static void setVolume(int usage,int volume);
+	static int getVolume100(int usage);
+	static int getVolume128(int usage);
 };
 
 class instrument
@@ -76,10 +90,10 @@ public:
 
 class play
 {
-	static int delay;
-	static void delayPlay(HMIDIOUT hMidi, int value, int key);
+	static int delay[2];
 public:
-	static void playNote(HMIDIOUT hMidi, int key, bool status);
-	static void setDelay(int time);
-	static int getDelay();
+	static void delayPlay(HMIDIOUT hMidi, int usage, int value, int key);
+	static void playNote(HMIDIOUT hMidi, int usage, int key, bool status);
+	static void setDelay(int usage,int time);
+	static int getDelay(int usage);
 };
