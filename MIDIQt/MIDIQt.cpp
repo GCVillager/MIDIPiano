@@ -2,6 +2,12 @@
 MIDIQt::MIDIQt(QWidget* parent)
 	: QMainWindow(parent)
 {
+	if (access("record", 0) == -1)  //判断该文件夹是否存在
+	{
+		int ret=mkdir("record");
+		//其实根本不想接收返回值，创建不了也没关系，但是它非得给我标警告
+	}
+
 	midiOutOpen(&hMidi, 0, 0, 0, 0);//打开midi设备，必须在使用hMidi之前！！！（惨痛）
 	//开始初始化UI
 	ui.setupUi(this);

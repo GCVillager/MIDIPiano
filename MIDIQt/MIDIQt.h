@@ -10,6 +10,9 @@
 #include <sstream>
 #include "ui_MIDIQt.h"
 
+#include <direct.h>
+#include <io.h>
+
 #include "midi.h"
 #include "instrument.h"
 #include "fileCfg.h"
