@@ -161,7 +161,7 @@ void play::playNote(HMIDIOUT hMidi, int usage, int key, bool status)//status:tru
 		int pitch = note::getNote(key);
 		int channel = channelPool::getChannel(usage,key);
 		int info = realVolume << 16 | pitch << 8 | 0x90 | channel;
-		recordCmd(info, key, status);
+		recordCmd(info, key, status);//记录按键
 		midiOutShortMsg(hMidi, info);
 		return;
 	}
