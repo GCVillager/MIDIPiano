@@ -43,7 +43,7 @@ void replay::recordCmd(int cmd,int key,int status)//记录当前的键盘操作
 		int curIns = instrument::getIns();
 		writeList << 0 << ' ' << (curIns << 8|0XC0 ) << ' ' << 0 << ' ' << 2<< std::endl;
 		writeList << "delay " << play::getDelay(channelPool::REPLAY) << std::endl;
-		//先记录一下此时乐器，否则信息丢失
+		//先记录一下此时乐器和延迟，否则信息丢失
 	}
 	auto now= std::chrono::system_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - startTime);
